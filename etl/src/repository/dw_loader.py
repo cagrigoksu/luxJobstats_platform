@@ -1,93 +1,90 @@
 import pandas as pd
+from sqlalchemy import text
 from repository.insert_data import insert_dataframe
-import json
 
-from enums.gender_enum import translate_gender
-from enums.continent_enum import translate_continent
-from enums.status_enum import translate_status
-from enums.country_enum import translate_country
-from enums.residence_enum import translate_residence_nationality
-from enums.age_enum import translate_age
+# dim updater, db is the source
+def get_or_create_dim(engine, table_name, col_fr, col_en, values):
+    values = [v for v in values if pd.notna(v)]
+    uniq = sorted(set(values))
+    if not uniq:
+        return {}
 
-from paths import LOCAL_DATA_DIR
+    with engine.begin() as conn:
+        # load existing dims
+        rows = conn.execute(text(f"SELECT id, {col_fr} FROM {table_name}"))
+        existing = {r[1]: r[0] for r in rows.fetchall()}
 
-NATIONALITY_JSON = LOCAL_DATA_DIR / "nationality_mapping_en.json"
-SECTOR_JSON = LOCAL_DATA_DIR / "sector_mapping_en.json"
+        # find new ones
+        missing = [v for v in uniq if v not in existing]
 
-def load_sector_map(): 
-    with open(SECTOR_JSON, "r", encoding="utf-8") as f: 
-        return json.load(f) 
-    
-def translate_sector(fr: str) -> str: 
-    sector_map = load_sector_map() 
-    return sector_map.get(fr, fr)
+        # insert new dims (en same as fr at start)
+        for fr_val in missing:
+            res = conn.execute(
+                text(f"""
+                    INSERT INTO {table_name} ({col_fr}, {col_en})
+                    VALUES (:fr, :en)
+                    RETURNING id
+                """),
+                {"fr": fr_val, "en": None},
+            )
+            existing[fr_val] = res.scalar()
 
-def load_nationality_map(): 
-    with open(NATIONALITY_JSON, "r", encoding="utf-8") as f: 
-        return json.load(f) 
-    
-def translate_nationality(fr: str) -> str: 
-    nationality_map = load_nationality_map() 
-    return nationality_map.get(fr, fr)
+    return existing
 
 
-def process_dataset1_df(df: pd.DataFrame, engine):
-
+# dataset 1 loader
+def process_dataset1_df(df, engine):
     if df.empty:
-        print("[ETL] Dataset1 is empty — skipping.")
+        print("[ETL] d1 empty")
         return
 
-    fact_df = pd.DataFrame()
+    country_map = get_or_create_dim(engine, "dim_country", "country_name_fr", "country_name_en", df["country_residence"])
+    cont_map = get_or_create_dim(engine, "dim_continent", "continent_name_fr", "continent_name_en", df["continent"])
+    nat_map = get_or_create_dim(engine, "dim_nationality", "nationality_fr", "nationality_en", df["nationality"])
+    sect_map = get_or_create_dim(engine, "dim_sector", "sector_name_fr", "sector_name_en", df["sector"])
 
-    fact_df["reference_date"] = df["reference_date"]
-    fact_df["country_id"] = df["country_residence"].apply(translate_country)
-    fact_df["continent_id"] = df["continent"].apply(translate_continent)
-    fact_df["nationality_id"] = df["nationality"].apply(translate_nationality)
-    fact_df["sector_id"] = df["sector"].apply(translate_sector)
-    fact_df["employee_count"] = df["employee_count"]
+    fact = pd.DataFrame()
+    fact["reference_date"] = df["reference_date"]
+    fact["country_id"] = df["country_residence"].map(country_map)
+    fact["continent_id"] = df["continent"].map(cont_map)
+    fact["nationality_id"] = df["nationality"].map(nat_map)
+    fact["sector_id"] = df["sector"].map(sect_map)
+    fact["employee_count"] = df["employee_count"]
 
-    _validate_missing_ids(
-        df, fact_df, ["country_id", "continent_id", "nationality_id", "sector_id"],
-        dataset_name="Dataset1"
-    )
+    _check_missing(df, fact, ["country_id","continent_id","nationality_id","sector_id"], "d1")
 
-    print(f"[ETL] Inserting {len(fact_df)} rows into fact_salaries_by_nationality...")
-    insert_dataframe(fact_df, "fact_salaries_by_nationality", engine)
+    insert_dataframe(fact, "fact_salaries_by_nationality", engine)
 
 
-def process_dataset2_df(df: pd.DataFrame, engine):
-
+# dataset 2 loader
+def process_dataset2_df(df, engine):
     if df.empty:
-        print("[ETL] Dataset2 is empty — skipping.")
+        print("[ETL] d2 empty")
         return
 
-    fact_df = pd.DataFrame()
+    gender_map = get_or_create_dim(engine, "dim_gender", "gender_fr", "gender_en", df["gender"])
+    res_nat_map = get_or_create_dim(engine, "dim_residence_nationality", "label_fr", "label_en", df["residence_nationality"])
+    age_map = get_or_create_dim(engine, "dim_age", "age_label_fr", "age_label_en", df["age"])
+    sect_map = get_or_create_dim(engine, "dim_sector", "sector_name_fr", "sector_name_en", df["sector"])
+    status_map = get_or_create_dim(engine, "dim_status", "status_fr", "status_en", df["status"])
 
-    fact_df["reference_date"] = df["reference_date"]
-    fact_df["gender_id"] = df["gender"].apply(translate_gender)
-    fact_df["residence_nationality_id"] = df["residence_nationality"].apply(translate_residence_nationality)
-    fact_df["age_id"] = df["age"].apply(translate_age)
-    fact_df["sector_id"] = df["sector"].apply(translate_sector)
-    fact_df["status_id"] = df["status"].apply(translate_status)
-    fact_df["employee_count"] = df["employee_count"]
+    fact = pd.DataFrame()
+    fact["reference_date"] = df["reference_date"]
+    fact["gender_id"] = df["gender"].map(gender_map)
+    fact["residence_nationality_id"] = df["residence_nationality"].map(res_nat_map)
+    fact["age_id"] = df["age"].map(age_map)
+    fact["sector_id"] = df["sector"].map(sect_map)
+    fact["status_id"] = df["status"].map(status_map)
+    fact["employee_count"] = df["employee_count"]
 
-    _validate_missing_ids(
-        df, fact_df,
-        ["gender_id", "residence_nationality_id", "age_id", "sector_id", "status_id"],
-        dataset_name="Dataset2"
-    )
+    _check_missing(df, fact, ["gender_id","residence_nationality_id","age_id","sector_id","status_id"], "d2")
 
-    print(f"[ETL] Inserting {len(fact_df)} rows into fact_salaries_by_characteristics...")
-    insert_dataframe(fact_df, "fact_salaries_by_characteristics", engine)
+    insert_dataframe(fact, "fact_salaries_by_characteristics", engine)
 
 
-def _validate_missing_ids(df: pd.DataFrame, fact_df: pd.DataFrame, enum_cols: list, dataset_name: str):
-
-    for col in enum_cols:
+# check unmapped vals
+def _check_missing(df, fact_df, cols, name):
+    for col in cols:
         if fact_df[col].isna().any():
-            print(f"\n[WARNING] Missing enum mapping in {dataset_name} for column: {col}")
-            missing_rows = df[fact_df[col].isna()]
-            print("Unique unmapped values:")
-            print(missing_rows.nunique())
-            print(missing_rows.head())
-            print("Fix the mapping in the corresponding enum file.\n")
+            print(f"\n[WARN] missing ids in {name} for {col}")
+            print(df[fact_df[col].isna()].head())

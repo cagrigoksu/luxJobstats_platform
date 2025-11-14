@@ -4,6 +4,5 @@ docker/.env
 docker/postgres/data/
 
 etl/env
-etl/.cache
 etl/.env
 etl/data/

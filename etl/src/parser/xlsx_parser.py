@@ -1,6 +1,7 @@
 import pandas as pd
 
-FRENCH_TO_ENGLISH_COLS = {
+# fr → en names
+FR2EN = {
     "Date de référence": "reference_date",
     "Pays résidence": "country_residence",
     "Continent nationalité": "continent",
@@ -14,20 +15,31 @@ FRENCH_TO_ENGLISH_COLS = {
 }
 
 def load_xlsx_to_df(filepath: str):
-    # xlsx to df
+    # read correct sheet
+    df = pd.read_excel(filepath, sheet_name="Données source")
 
-    try:
-        df = pd.read_excel(filepath, sheet_name="Données source")
-        print(f"[PARSER] Loaded '{filepath}' -> {df.shape[0]} rows")
+    # rename cols
+    df.rename(columns=FR2EN, inplace=True)
 
-        # eename fields to English
-        df.rename(columns=FRENCH_TO_ENGLISH_COLS, inplace=True)
+    # keep known cols only
+    df = df[[c for c in df.columns if c in FR2EN.values()]]
 
-        # Keep only columns we recognize
-        df = df[[col for col in df.columns if col in FRENCH_TO_ENGLISH_COLS.values()]]
+    # trim all str values
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].astype(str).str.strip()
 
-        return df
+    # fix numbers
+    if "employee_count" in df.columns:
+        df["employee_count"] = (
+            df["employee_count"].astype(str)
+            .str.replace(" ", "")
+            .str.replace(",", ".")
+        )
+        df["employee_count"] = pd.to_numeric(df["employee_count"], errors="coerce").fillna(0).astype(int)
 
-    except Exception as e:
-        print(f"[ERROR] Failed parsing Excel file: {filepath}")
-        raise e
+    # fix dates
+    if "reference_date" in df.columns:
+        df["reference_date"] = pd.to_datetime(df["reference_date"], errors="coerce").dt.date
+
+    return df

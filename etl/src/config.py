@@ -3,6 +3,8 @@ import os
 
 load_dotenv()
 
+DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
+
 POSTGRES = {
     "host": os.getenv("POSTGRES_HOST"),
     "port": os.getenv("POSTGRES_PORT"),
