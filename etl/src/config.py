@@ -11,11 +11,11 @@ POSTGRES = {
     "password": os.getenv("POSTGRES_PASSWORD")
 }
 
-DATA_URLS = [
-    os.getenv("DATA_URL_1"),
-    os.getenv("DATA_URL_2"),
-    os.getenv("DATA_DWNLD_URL_1"),
-    os.getenv("DATA_DWNLD_URL_2"),
-]
+DATA_URLS = {
+    "DATA_URL_1": os.getenv("DATA_URL_1"),
+    "DATA_DWNLD_URL_1": os.getenv("DATA_DWNLD_URL_1"),
 
-print(DATA_URLS)
+    "DATA_URL_2": os.getenv("DATA_URL_2"),
+    "DATA_DWNLD_URL_2": os.getenv("DATA_DWNLD_URL_2")
+}
+
