@@ -8,6 +8,7 @@ services:
     env_file:
       - .env
     environment:
+      TZ: Europe/Luxembourg
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -15,3 +16,29 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro 
+
+
+
+  etl:
+    build:
+      context: ..
+      dockerfile: docker/etl/Dockerfile
+    container_name: luxjob_etl
+    restart: always
+    env_file:
+      - ../etl/.env
+    depends_on:
+      - postgres
+    volumes:
+      - ../etl:/app/etl  
+      - /etc/localtime:/etc/localtime:ro 
+    networks:
+      - default
+    environment:
+      - TZ=Europe/Luxembourg
+
+
+networks:
+  default:
+    driver: bridge
