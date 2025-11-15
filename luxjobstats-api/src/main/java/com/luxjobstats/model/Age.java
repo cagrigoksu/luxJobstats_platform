@@ -5,18 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dim_nationality")
+@Table(name = "dim_age")
 @Getter
 @Setter
-public class Nationality {
+public class Age {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "nationality_fr")
-    private String nationalityFr;
+    @Column(name = "age_label_fr")
+    private String ageFr;
 
-    @Column(name = "nationality_en")
-    private String nationalityEn;
+    @Column(name = "age_label_en")
+    private String ageEn;
 }
