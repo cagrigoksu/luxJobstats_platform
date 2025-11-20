@@ -1,4 +1,5 @@
 using AuthService.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +11,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+//* db context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSQLConnection")));
 
+//* identity
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -23,9 +35,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+//* app. A > Z
 app.MapControllers();
-
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.Run();
