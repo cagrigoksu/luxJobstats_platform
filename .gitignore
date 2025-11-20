@@ -8,3 +8,5 @@ docker/postgres/data/
 etl/env
 etl/data/
 
+auth/src/AuthService/bin/
+auth/src/AuthService/appsettings.json
