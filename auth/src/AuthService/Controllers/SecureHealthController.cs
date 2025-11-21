@@ -1,29 +1,30 @@
 using AuthService.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class HealthController : ControllerBase
+[Route("app-health")]
+public class SecureHealthController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public HealthController(ApplicationDbContext dbContext)
+    public SecureHealthController(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    [HttpGet("hello")]
-    public IActionResult Hello()
+    [Authorize]
+    [HttpGet("jwtSecurityTest")]
+    public IActionResult JwtSecurityTest()
     {
-        return Ok(new { message = "AuthService is running." });
+        return Ok(new { message = "AuthService is running, Security Test passed using Jwt." });
     }
 
     // db connection test
-    [HttpGet("db")]
-    public async Task<IActionResult> Db()
+    [HttpGet("dbConnectionTest")]
+    public async Task<IActionResult> DbConnectionTest()
     {
         try
         {

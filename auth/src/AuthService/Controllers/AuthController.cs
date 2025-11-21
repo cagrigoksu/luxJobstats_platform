@@ -1,4 +1,5 @@
 using AuthService.Data;
+using AuthService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,16 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
 
+    private readonly JwtService _jwtService;
+
     public AuthController(
         UserManager<User> userManager,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        JwtService jwtService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _jwtService = jwtService;
     }
 
     [HttpPost("register")]
@@ -41,14 +46,25 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        var result = await _signInManager.PasswordSignInAsync(
-            dto.Email, dto.Password, isPersistent: false, lockoutOnFailure: false);
+        var user = await _userManager.FindByEmailAsync(dto.Email);
 
-        if (!result.Succeeded)
+        if (user == null)
             return Unauthorized(new { message = "Invalid login" });
 
-        return Ok(new { message = "Login OK" });
+        var passwordCheck = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+
+        if (!passwordCheck.Succeeded)
+            return Unauthorized(new { message = "Invalid password" });
+
+        var token = _jwtService.GenerateToken(user);
+
+        return Ok(new
+        {
+            message = "Login successful",
+            accessToken = token
+        });
     }
+
 }
 
 public record RegisterDto(string Email, string Password);
