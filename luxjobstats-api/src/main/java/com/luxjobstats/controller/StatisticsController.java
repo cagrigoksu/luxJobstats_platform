@@ -1,6 +1,7 @@
 package com.luxjobstats.controller;
 
 import com.luxjobstats.dto.EmployeesBySectorDTO;
+import com.luxjobstats.dto.GenderOverTimeDto;
 import com.luxjobstats.dto.TotalEmployeesByYearDTO;
 import com.luxjobstats.dto.TrendPointDTO;
 import com.luxjobstats.service.StatisticsService;
@@ -51,6 +52,11 @@ public class StatisticsController {
     @GetMapping("/trend")
     public List<TrendPointDTO> getTrendOverTime(){
         return statisticsService.getTrendOverTime();
+    }
+
+     @GetMapping("/over-time")
+    public List<GenderOverTimeDto> getEmployeesByGenderOverTime() {
+        return statisticsService.getEmployeesByGenderOverTime();
     }
 
 

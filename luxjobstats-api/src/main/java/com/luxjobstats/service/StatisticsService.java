@@ -1,6 +1,7 @@
 package com.luxjobstats.service;
 
 import com.luxjobstats.dto.EmployeesBySectorDTO;
+import com.luxjobstats.dto.GenderOverTimeDto;
 import com.luxjobstats.dto.TotalEmployeesByYearDTO;
 import com.luxjobstats.dto.TrendPointDTO;
 import com.luxjobstats.repository.FactSalariesByCharacteristicsRepository;
@@ -168,6 +169,26 @@ public class StatisticsService {
 
         return trend;
     }
+
+    //TODO fix here
+    //! IMPORTANT
+    public List<GenderOverTimeDto> getEmployeesByGenderOverTime() {
+        List<Object[]> rows =
+                factSalariesByCharacteristicsRepository.getEmployeesByGenderOverTime();
+
+        List<GenderOverTimeDto> result = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            LocalDate date = (LocalDate) row[0];
+            String gender = (String) row[1];
+            Long employees = ((Number) row[2]).longValue();
+
+            result.add(new GenderOverTimeDto(date, gender, employees));
+        }
+
+        return result;
+    }
+
 
 
 
