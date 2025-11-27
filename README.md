@@ -71,3 +71,5 @@ Only missing translations are processed (*_en IS NULL_) to avoid unnecessary API
 - Runs as a Dockerized service with its own environment.
 - Runs _**daily**_ dataset source check.
 - Logs all operations to `/var/log/etl.log`.
+
+## LuxJobStats-AuthServer (C#)
