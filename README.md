@@ -40,9 +40,9 @@ Spring Data JPA interfaces that query the PostgreSQL tables created by the ETL.
 
 ## ETL Module (Python Data Pipeline)
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Pandas](https://img.shields.io/badge/Pandas-2.3.3-orange)
+![Pandas](https://img.shields.io/badge/Pandas-2.3.3-green)
 ![NumPy](https://img.shields.io/badge/NumPy-2.3.4-yellow)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-orange)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-informational)
 
 
@@ -73,3 +73,10 @@ Only missing translations are processed (*_en IS NULL_) to avoid unnecessary API
 - Logs all operations to `/var/log/etl.log`.
 
 ## LuxJobStats-AuthServer (C#)
+![C#](https://img.shields.io/badge/C%23-12.0-purple)
+![.NET](https://img.shields.io/badge/.NET-8.0-blueviolet)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Web%20API-lightgrey)
+![Entity Framework](https://img.shields.io/badge/Entity%20Framework-Core%208.0-green)
+![SQL Database](https://img.shields.io/badge/Azure%20SQL-Connected-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-informational)
+
