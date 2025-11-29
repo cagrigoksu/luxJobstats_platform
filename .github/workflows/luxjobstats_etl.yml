@@ -49,3 +49,6 @@ jobs:
           DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
 
         run: python src/translate_dims.py
+        
+      - name: Done
+        run: echo "ETL + Translation completed successfully"
