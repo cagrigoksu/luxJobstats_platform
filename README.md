@@ -38,12 +38,15 @@ Spring Data JPA interfaces that query the PostgreSQL tables created by the ETL.
 
 ---
 
-## ETL Module (Python Data Pipeline)
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Pandas](https://img.shields.io/badge/Pandas-2.3.3-green)
-![NumPy](https://img.shields.io/badge/NumPy-2.3.4-yellow)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-orange)
+
+## LuxJobStats-ETL (Python Data Pipeline) (Python Data Pipeline)
+![Python](https://img.shields.io/badge/Python-3.11-lightgrey)
+![Pandas](https://img.shields.io/badge/Pandas-2.3.3-lightgrey)
+![NumPy](https://img.shields.io/badge/NumPy-2.3.4-lightgrey)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-lightgrey)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-informational)
+![GithubActions](https://img.shields.io/badge/Github_Actions-Active-brightgreen?logo=github)
+![Neon](https://img.shields.io/badge/Online_Service-Active-brightgreen?logo=postgresql&logoColor=F5F5F5)
 
 
 The **ETL module** is responsible for collecting, transforming, and loading the official Luxembourg job-market datasets into PostgreSQL. This data is then consumed by the Java API.
