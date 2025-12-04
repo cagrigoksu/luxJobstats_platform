@@ -38,12 +38,15 @@ Spring Data JPA interfaces that query the PostgreSQL tables created by the ETL.
 
 ---
 
-## ETL Module (Python Data Pipeline)
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Pandas](https://img.shields.io/badge/Pandas-2.3.3-orange)
-![NumPy](https://img.shields.io/badge/NumPy-2.3.4-yellow)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+
+## LuxJobStats-ETL (Python Data Pipeline) (Python Data Pipeline)
+![Python](https://img.shields.io/badge/Python-3.11-lightgrey)
+![Pandas](https://img.shields.io/badge/Pandas-2.3.3-lightgrey)
+![NumPy](https://img.shields.io/badge/NumPy-2.3.4-lightgrey)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-lightgrey)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-informational)
+![GithubActions](https://img.shields.io/badge/Github_Actions-Active-brightgreen?logo=github)
+![Neon](https://img.shields.io/badge/Online_Service-Active-brightgreen?logo=postgresql&logoColor=F5F5F5)
 
 
 The **ETL module** is responsible for collecting, transforming, and loading the official Luxembourg job-market datasets into PostgreSQL. This data is then consumed by the Java API.
@@ -71,3 +74,12 @@ Only missing translations are processed (*_en IS NULL_) to avoid unnecessary API
 - Runs as a Dockerized service with its own environment.
 - Runs _**daily**_ dataset source check.
 - Logs all operations to `/var/log/etl.log`.
+
+## LuxJobStats-AuthServer (C#)
+![C#](https://img.shields.io/badge/C%23-12.0-purple)
+![.NET](https://img.shields.io/badge/.NET-8.0-blueviolet)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Web%20API-lightgrey)
+![Entity Framework](https://img.shields.io/badge/Entity%20Framework-Core%208.0-green)
+![SQL Database](https://img.shields.io/badge/Azure%20SQL-Connected-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-informational)
+

@@ -1,28 +1,73 @@
-# Environment
+# ================================
+# Environment files
+# ================================
 **/.env
 **/.env.local
 **/.env.docker
 **/appsettings.json
+**/appsettings.Development.json
 
+# ================================
 # Python
+# ================================
 **/__pycache__/
 
-# IDE
+# ================================
+# IDE/Editor
+# ================================
 .vscode/
 .idea/
+*.code-workspace
 
+# ================================
 # Docker volumes
+# ================================
 docker/postgres/data/
 
-# LSJ_ETL
-etl/env
+# ================================
+# LJS_ETL
+# ================================
+etl/env/
 etl/data/
-etl/etl.code-workspace
 
-# LJS_AUTH
-auth/auth.code-workspace
-auth/src/AuthService/bin/
-auth/src/AuthService/obj/
+# ================================
+# .NET GLOBAL IGNORE RULES
+# ================================
 
-# LSJ_API
-luxjobstats-api/luxjobstats-api.code-workspace
+# Ignore ALL bin/obj folders (recursive)
+**/bin/
+**/obj/
+**/publish/
+
+# Ignore compiled assemblies
+*.dll
+*.pdb
+*.exe
+
+# Ignore .NET auto-generated files
+*.cache
+*.db
+*.log
+
+# Ignore auto-generated Roslyn / EF Core / MSBuild metadata
+*AssemblyInfo.cs
+*AssemblyInfoInputs.cache
+*.FileListAbsolute.txt
+*sourcelink.json
+
+# Ignore local debug config copies produced inside bin/
+**/bin/**/*.json
+
+# ================================
+# Old auth project (deprecated)
+# ================================
+auth/src/
+auth/auth.sln
+
+# ================================
+# New auth project folder
+# ================================
+luxjobstats-auth/src/AuthService/bin/
+luxjobstats-auth/src/AuthService/obj/
+luxjobstats-auth/src/AuthService/publish/
+

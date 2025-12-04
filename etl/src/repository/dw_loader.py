@@ -2,6 +2,20 @@ import pandas as pd
 from sqlalchemy import text
 from repository.insert_data import insert_dataframe
 
+def filter_existing_dates(engine, table, df):
+    dates = df["reference_date"].unique().tolist()
+
+    with engine.begin() as conn:
+        rows = conn.execute(
+            text(f"SELECT DISTINCT reference_date FROM {table} WHERE reference_date = ANY(:dates);"),
+            {"dates": dates}
+        ).fetchall()
+
+    existing = {r[0] for r in rows}
+    new_rows = df[~df["reference_date"].isin(existing)]
+
+    return new_rows
+
 # dim updater, db is the source
 def get_or_create_dim(engine, table_name, col_fr, col_en, values):
     values = [v for v in values if pd.notna(v)]
@@ -50,6 +64,11 @@ def process_dataset1_df(df, engine):
 
     _check_missing(df, fact, ["residence_id","continent_id","nationality_id","sector_id"], "d1")
 
+    fact = filter_existing_dates(engine, "fact_data_by_nationality", fact)
+    if len(fact) == 0:
+        print("no new dates for d1")
+        return
+    
     insert_dataframe(fact, "fact_data_by_nationality", engine)
 
 
@@ -76,6 +95,10 @@ def process_dataset2_df(df, engine):
 
     _check_missing(df, fact, ["gender_id","residence_id","age_id","sector_id","status_id"], "d2")
 
+    fact = filter_existing_dates(engine, "fact_data_by_characteristics", fact)
+    if len(fact) == 0:
+        print("no new dates for d2")
+        return
     insert_dataframe(fact, "fact_data_by_characteristics", engine)
 
 
