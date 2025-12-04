@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { clearTokens, getAccessToken } from '../api/client';
+import { createContext, useContext, useEffect, useState } from "react";
+import { getAccessToken, clearTokens } from "../api/client";
 
 type AuthState = {
   isAuthenticated: boolean;
@@ -9,27 +9,34 @@ type AuthState = {
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(getAccessToken());
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getAccessToken());
 
+  //! listen for login/logout events from setTokens() > client.ts
   useEffect(() => {
-    const onStorage = () => setToken(getAccessToken());
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    const handler = () => {
+      const token = getAccessToken();
+      setIsAuthenticated(!!token);
+    };
+
+    window.addEventListener("auth-changed", handler);
+    return () => window.removeEventListener("auth-changed", handler);
   }, []);
 
-  const value = useMemo<AuthState>(() => ({
-    isAuthenticated: !!token,
-    signOut: () => {
-      clearTokens();
-      setToken(null);
-    },
-  }), [token]);
+  const signOut = () => {
+    clearTokens();
+    setIsAuthenticated(false);
+    window.dispatchEvent(new Event("auth-changed"));
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) throw new Error("useAuth must be inside AuthProvider");
   return ctx;
 }

@@ -18,7 +18,11 @@ export function getAccessToken() {
 export function setTokens(accessToken: string, refreshToken?: string) {
   localStorage.setItem(TOKEN_KEY, accessToken);
   if (refreshToken) localStorage.setItem(REFRESH_KEY, refreshToken);
+
+  //! notify AuthContext
+  window.dispatchEvent(new Event("auth-changed"));
 }
+
 
 export function clearTokens() {
   localStorage.removeItem(TOKEN_KEY);
