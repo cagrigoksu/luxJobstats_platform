@@ -19,36 +19,39 @@ export default function SignUp() {
         <h2>Create Account</h2>
 
         <table>
-          <tr>
-            <td>
-              <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                placeholder="you@example.com"
-                required/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                placeholder="password"
-                required/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input
-                type="password" 
-                value={confirm} 
-                onChange={(e) => setConfirm(e.target.value)} 
-                placeholder="confirm password"
-                required/>
-            </td>
-          </tr>          
+          <thead></thead>
+          <tbody>
+            <tr>
+              <td>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="you@example.com"
+                  required/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="password"
+                  required/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  type="password" 
+                  value={confirm} 
+                  onChange={(e) => setConfirm(e.target.value)} 
+                  placeholder="confirm password"
+                  required/>
+              </td>
+            </tr>    
+          </tbody>      
         </table>
 
         <button type="submit" className="btn">Sign up</button>

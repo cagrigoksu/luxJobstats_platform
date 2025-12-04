@@ -16,26 +16,29 @@ export default function SignIn() {
         <h2>Sign In</h2>
 
         <table>
-          <tr>
-            <td>
-              <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                placeholder="you@example.com"
-                required/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                placeholder="password"
-                required/>
-            </td>
-          </tr>
+          <thead></thead>
+          <tbody>
+            <tr>
+              <td>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="you@example.com"
+                  required/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="password"
+                  required/>
+              </td>
+            </tr>
+          </tbody>
         </table>
 
         <button type="submit" className="btn">Sign in</button>
