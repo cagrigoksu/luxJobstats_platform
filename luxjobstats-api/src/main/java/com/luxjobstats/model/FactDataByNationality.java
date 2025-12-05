@@ -1,40 +1,38 @@
 package com.luxjobstats.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "fact_salaries_by_nationality")
-@Getter
-@Setter
-public class FactSalariesByNationality {
+@Table(name = "fact_data_by_nationality")
+@Data
+public class FactDataByNationality {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "reference_date")
     private LocalDate referenceDate;
 
     @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
+    @JoinColumn(name = "residence_id")
+    private DimResidenceOnNationality residence;
 
     @ManyToOne
     @JoinColumn(name = "continent_id")
-    private Continent continent;
+    private DimContinent continent;
 
     @ManyToOne
     @JoinColumn(name = "nationality_id")
-    private Nationality nationality;
+    private DimNationality nationality;
 
     @ManyToOne
     @JoinColumn(name = "sector_id")
-    private Sector sector;
+    private DimSector sector;
 
-    @Column(name = "employee_count")
-    private Integer employeeCount;
+    @Column(name = "number_of_employee")
+    private Long numberOfEmployee;
 }

@@ -1,65 +1,39 @@
 package com.luxjobstats.controller;
 
-import com.luxjobstats.dto.EmployeesBySectorDTO;
 import com.luxjobstats.dto.GenderOverTimeDto;
-import com.luxjobstats.dto.TotalEmployeesByYearDTO;
-import com.luxjobstats.dto.TrendPointDTO;
 import com.luxjobstats.service.StatisticsService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/statistics")
 public class StatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final StatisticsService service;
 
-    public StatisticsController(StatisticsService statisticsService) {
-        this.statisticsService = statisticsService;
+    public StatisticsController(StatisticsService service) {
+        this.service = service;
     }
 
     @GetMapping("/overview")
-    public Object getOverview() {
-        return statisticsService.getOverview();
+    public Map<String, Object> overview() {
+        return service.getOverview();
     }
 
     @GetMapping("/sector/{sectorId}")
-    public Object getSectorStatistics(@PathVariable Long sectorId) {
-        return statisticsService.getSectorStatistics(sectorId);
+    public Map<String, Object> sector(@PathVariable Long sectorId) {
+        return service.getSectorStatistics(sectorId);
     }
 
     @GetMapping("/nationality/{nationalityId}")
-    public Object getNationalityStatistics(@PathVariable Long nationalityId) {
-        return statisticsService.getNationalityStatistics(nationalityId);
+    public Map<String, Object> nationality(@PathVariable Long nationalityId) {
+        return service.getNationalityStatistics(nationalityId);
     }
 
-    @GetMapping("/nationality/{id}/employees-by-sector")
-    public List<EmployeesBySectorDTO> getEmployeesBySectorForNationality(@PathVariable Long id) {
-
-        return statisticsService.getEmployeesBySectorForNationality(id);
+    @GetMapping("/gender")
+    public List<GenderOverTimeDto> genderOverTime() {
+        return service.getEmployeesByGenderOverTime();
     }
-
-    @GetMapping("/employees-by-year")
-    public List<TotalEmployeesByYearDTO> getEmployeesByYear() {
-        return statisticsService.getTotalEmployeesByYear();
-    }
-
-    @GetMapping("/trend")
-    public List<TrendPointDTO> getTrendOverTime(){
-        return statisticsService.getTrendOverTime();
-    }
-
-     @GetMapping("/over-time")
-    public List<GenderOverTimeDto> getEmployeesByGenderOverTime() {
-        return statisticsService.getEmployeesByGenderOverTime();
-    }
-
-
-
-
 }

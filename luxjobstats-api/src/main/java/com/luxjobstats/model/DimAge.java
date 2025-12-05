@@ -1,22 +1,20 @@
 package com.luxjobstats.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "dim_age")
-@Getter
-@Setter
-public class Age {
+@Data
+public class DimAge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "age_label_fr")
-    private String ageFr;
+    private String ageLabelFr;
 
     @Column(name = "age_label_en")
-    private String ageEn;
+    private String ageLabelEn;
 }

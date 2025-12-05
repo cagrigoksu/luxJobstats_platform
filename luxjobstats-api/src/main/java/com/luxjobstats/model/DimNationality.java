@@ -1,18 +1,16 @@
 package com.luxjobstats.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "dim_nationality")
-@Getter
-@Setter
-public class Nationality {
+@Data
+public class DimNationality {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "nationality_fr")
     private String nationalityFr;

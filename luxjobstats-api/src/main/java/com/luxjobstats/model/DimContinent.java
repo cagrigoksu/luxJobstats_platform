@@ -1,22 +1,20 @@
 package com.luxjobstats.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "dim_continent")
-@Getter
-@Setter
-public class Continent {
+@Data
+public class DimContinent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "continent_name_fr")
+    @Column(name = "continent_fr")
     private String continentFr;
 
-    @Column(name = "continent_name_en")
+    @Column(name = "continent_en")
     private String continentEn;
 }

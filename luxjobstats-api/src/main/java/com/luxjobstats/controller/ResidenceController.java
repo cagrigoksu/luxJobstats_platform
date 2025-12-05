@@ -1,27 +1,35 @@
 package com.luxjobstats.controller;
 
+import com.luxjobstats.model.DimResidenceOnNationality;
+import com.luxjobstats.model.DimResidenceOnCharacteristics;
+import com.luxjobstats.service.DimResidenceOnNationalityService;
+import com.luxjobstats.service.DimResidenceOnCharacteristicsService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.luxjobstats.model.ResidenceNationality;
-import com.luxjobstats.service.ResidenceService;
-
 @RestController
-@RequestMapping("/api/residents")
+@RequestMapping("/api/residences")
 public class ResidenceController {
 
-    private final ResidenceService residenceService;
+    private final DimResidenceOnNationalityService natService;
+    private final DimResidenceOnCharacteristicsService charService;
 
-    public ResidenceController(ResidenceService residenceService){
-        this.residenceService = residenceService;
+    public ResidenceController(
+            DimResidenceOnNationalityService natService,
+            DimResidenceOnCharacteristicsService charService
+    ) {
+        this.natService = natService;
+        this.charService = charService;
     }
 
-    @GetMapping
-    public List<ResidenceNationality> getAll(){
-        return residenceService.getAllResidentNationalities();
+    @GetMapping("/nationality")
+    public List<DimResidenceOnNationality> getNationalityResidences() {
+        return natService.getAll();
     }
-    
+
+    @GetMapping("/characteristics")
+    public List<DimResidenceOnCharacteristics> getCharacteristicsResidences() {
+        return charService.getAll();
+    }
 }

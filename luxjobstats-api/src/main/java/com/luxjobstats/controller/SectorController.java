@@ -1,26 +1,23 @@
 package com.luxjobstats.controller;
 
+import com.luxjobstats.model.DimSector;
+import com.luxjobstats.service.DimSectorService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.luxjobstats.model.Sector;
-import com.luxjobstats.service.SectorService;
 
 @RestController
 @RequestMapping("/api/sectors")
 public class SectorController {
 
-    private final SectorService sectorService;
+    private final DimSectorService service;
 
-    public SectorController(SectorService sectorService){
-        this.sectorService = sectorService;
+    public SectorController(DimSectorService service) {
+        this.service = service;
     }
-    
+
     @GetMapping
-    public List<Sector> getAll(){
-        return sectorService.getAllSectors();
+    public List<DimSector> getAll() {
+        return service.getAll();
     }
 }

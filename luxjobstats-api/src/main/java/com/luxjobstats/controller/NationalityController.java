@@ -1,28 +1,23 @@
 package com.luxjobstats.controller;
 
+import com.luxjobstats.model.DimNationality;
+import com.luxjobstats.service.DimNationalityService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.luxjobstats.model.Nationality;
-import com.luxjobstats.service.NationalityService;
 
 @RestController
 @RequestMapping("/api/nationalities")
 public class NationalityController {
 
-    private final NationalityService nationalityService;
+    private final DimNationalityService service;
 
-    public NationalityController(NationalityService nationalityService){
-        this.nationalityService = nationalityService;
+    public NationalityController(DimNationalityService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Nationality> getAll(){
-        return nationalityService.getAllNationalities();
+    public List<DimNationality> getAll() {
+        return service.getAll();
     }
-
-    
 }
