@@ -1,0 +1,8 @@
+[phases.setup]
+aptPkgs = ["openjdk-21-jdk"]
+
+[phases.build]
+cmds = ["mvn -DskipTests clean package"]
+
+[start]
+cmd = "java -jar target/*.jar"
